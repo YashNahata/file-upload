@@ -1,0 +1,76 @@
+{% extends 'base.html' %} 
+{% block title %}File Upload - Home{% endblock title%} 
+{% block body %} 
+{% if user.is_authenticated %}
+<div class="container my-3">
+  <h3>Welcome {{ user.first_name }} {{ user.last_name }}</h3>
+  <div class="container my-5">
+    <h5>Your saved files</h5>
+    {% if files.count == 0 %}
+    <div class="card my-3 w-50">
+      <div class="card-body">
+        <p class="card-text">No files found. Please upload to see here.</p>
+      </div>
+    </div>
+    {% endif %} 
+    {% for file in files %}
+    <div class="card my-3 w-50">
+      <div class="card-body">
+        <h5 class="card-title">{{ file.title }}</h5>
+        <p class="card-text">{{ file.description }}</p>
+        <a
+          href="{{ file.file.url }}"
+          class="btn btn-outline-primary btn-sm me-2"
+          target="_blank"
+          >View</a
+        >
+        <a
+          href="{{ file.file.url }}"
+          class="btn btn-outline-primary btn-sm me-2"
+          download
+          >Download</a
+        >
+        <button
+          data-copy-link="{{ file.file.url }}"
+          class="btn btn-outline-primary btn-sm me-2"
+          onclick="copyContent(this)"
+        >
+          Copy link
+        </button>
+        <form
+          action="/delete{{ file.id }}"
+          method="POST"
+          class="text-end"
+          style="margin-top: -2rem !important"
+        >
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-danger btn-sm">
+            Delete
+          </button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% else %}
+<div class="container my-5">
+  <h2>Welcome to File Upload</h2>
+  <p>Upload any type file and share the link with your friends and family</p>
+  <p>Restore deleted files from the bin</p>
+  <p>A safe and secure platform</p>
+  <a href="/signup" class="btn btn-primary my-2">Get Started</a>
+</div>
+{% endif %}
+<script>
+  const copyContent = async (e) => {
+    try {
+      await navigator.clipboard.writeText(
+        window.location.origin + e.attributes[0].value
+      );
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+    }
+  };
+</script>
+{% endblock body %}

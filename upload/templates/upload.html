@@ -1,0 +1,49 @@
+{% extends 'base.html' %} 
+{% block title %}Hult Prize - Upload{% endblock title%} 
+{% block body %} 
+{% if user.is_authenticated %}
+<div class="container my-3">
+  <h3>Upload your file</h3>
+  <form
+    class="my-3 w-50"
+    action="/upload"
+    method="POST"
+    enctype="multipart/form-data"
+  >
+    {% csrf_token %}
+    <div class="input-group mb-3">
+      <span class="input-group-text">Title</span>
+      <input
+        type="text"
+        class="form-control"
+        id="title"
+        name="title"
+        required
+      />
+    </div>
+    <div class="input-group mb-3">
+      <span class="input-group-text">Description</span>
+      <textarea
+        class="form-control"
+        id="description"
+        name="description"
+      ></textarea>
+    </div>
+    <div class="input-group mb-3">
+      <input
+        type="file"
+        class="form-control"
+        id="upload-file"
+        name="upload-file"
+        required
+      />
+    </div>
+    <button type="submit" class="btn btn-primary my-2">Submit</button>
+  </form>
+</div>
+{% else %}
+<div class="container my-3">
+  <h3>Please log in to upload a file</h3>
+</div>
+{% endif %}
+{% endblock body %}
