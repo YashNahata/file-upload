@@ -70,6 +70,18 @@ def handleUpload(request):
         title = request.POST.get('title')
         description = request.POST.get('description')
         file = request.FILES['upload-file']
+        if len(title) == 0:
+            messages.warning(request, "Title cannot be empty")
+            return redirect('/upload')
+        if len(title) > 100:
+            messages.warning(request, "Title cannot be greater than 100 characters")
+            return redirect('/upload')
+        if len(description) > 100:
+            messages.warning(request, "Description cannot be greater than 200 characters")
+            return redirect('/upload')
+        if len(file.read()) > 83886080:
+            messages.warning(request, "File size cannot be more than 10mb")
+            return redirect('/upload')
         upload = File(user=request.user, title=title, description=description, file=file)
         upload.save()
         messages.success(request, 'File uploaded successfully')
