@@ -53,6 +53,17 @@
     {% endfor %}
   </div>
 </div>
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="liveToast" class="toast" role="alert">
+    <div class="toast-header">
+      <strong class="me-auto">File Upload</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      Link copied
+    </div>
+  </div>
+</div>
 {% else %}
 <div class="container my-5">
   <h2>Welcome to File Upload</h2>
@@ -68,6 +79,8 @@
       await navigator.clipboard.writeText(
         window.location.origin + e.attributes[0].value
       );
+      const toast = new bootstrap.Toast(document.getElementById('liveToast'));
+      toast.show();
     } catch (err) {
       console.error("Failed to copy: ", err);
     }
