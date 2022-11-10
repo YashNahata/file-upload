@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from .models import File, Bin
 from django.contrib.auth import authenticate, login, logout
 from django.http import FileResponse
+from datetime import datetime
 
 # Create your views here.
 def home(request):
@@ -111,6 +112,13 @@ def handleMedia(request, file_name):
 def handleBin(request):
     if request.method == 'GET':
         if request.user.is_authenticated:
+            bin_files = Bin.objects.filter(user=request.user).all()
+            for bin_file in bin_files:
+                deleted_at = bin_file.deleted_at.date()
+                date_now = datetime.now().date()
+                delta = date_now - deleted_at
+                if delta.days >= 30:
+                    bin_file.delete()
             bin_files = Bin.objects.filter(user=request.user).all()
             return render(request, 'bin.html', { 'bin_files': bin_files })
         else:

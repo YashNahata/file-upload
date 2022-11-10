@@ -3,6 +3,7 @@
 {% block body %} 
 <div class="container my-3">
     <h5>Your deleted files</h5>
+    <p>Files will be auto-deleted after 30 days of adding to bin</p>
     {% if bin_files.count == 0 %}
     <div class="card my-3 w-50">
       <div class="card-body">
@@ -15,6 +16,7 @@
       <div class="card-body">
         <h5 class="card-title">{{ bin_file.title }}</h5>
         <p class="card-text">{{ bin_file.description }}</p>
+        <p class="card-text small">File deleted at - {{ bin_file.deleted_at }}</p>
         <form
           action="/bin-restore{{ bin_file.id }}"
           method="POST"
